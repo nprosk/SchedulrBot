@@ -1,0 +1,31 @@
+/add-matchup [week #] [role 1] [role 2] [status]
+this command will add the matchup to the matchup database
+admin only
+
+/remove-matchup [week #] [role 1] [role 2] [status]
+this command will remove the matchup from the matchup database
+admin only
+
+/create-channels [week #]
+this command will create the channels for the week
+admin only
+
+/destroy-channels [week #]
+this command will destroy the channels for the week
+admin only
+
+/confirm-match
+this command will confirm the match and move the channel to the confirmed category and update the matchup database
+admin only
+
+/destroy-channel
+this command will destroy the channel and update the matchup database
+admin only
+
+/forfeit-match
+this command will forfeit the match and move the channel to the forfeited category and update the matchup database
+all users, only in the matchup channels
+asks for confirmation
+
+send-message-team-channels channel where if you send a message, it will send to all the team channels
+send-message-matchup-channels channel where if you send a message, it will send to all the matchup channels
