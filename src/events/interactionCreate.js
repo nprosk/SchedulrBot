@@ -1,4 +1,13 @@
 const { Events } = require("discord.js");
+const {
+  handleButtonInteraction,
+} = require("../utils/interactionHandlers/handleButtonInteraction");
+const {
+  handleRoleSelectInteraction,
+} = require("../utils/interactionHandlers/handleRoleSelectInteraction");
+const {
+  handleStringSelectInteraction,
+} = require("../utils/interactionHandlers/handleStringSelectInteraction");
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -29,6 +38,12 @@ module.exports = {
           });
         }
       }
+    } else if (interaction.isButton()) {
+      handleButtonInteraction(interaction);
+    } else if (interaction.isRoleSelectMenu()) {
+      handleRoleSelectInteraction(interaction);
+    } else if (interaction.isStringSelectMenu()) {
+      handleStringSelectInteraction(interaction);
     }
   },
 };

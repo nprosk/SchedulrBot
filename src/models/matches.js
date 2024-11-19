@@ -5,6 +5,7 @@ const matchesSchema = new Schema({
   role1: { type: String, required: true },
   role2: { type: String, required: true },
   status: { type: String, required: false, default: 'pending' },
+  server: { type: String, required: true },
 });
 
 module.exports = model('Matches', matchesSchema);
