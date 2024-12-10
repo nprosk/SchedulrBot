@@ -1,14 +1,26 @@
-const { parseDatabase } = require("../database/parseDatabase");
-const { writeToDatabase } = require("../database/writeToDatabase");
+const MatchupMakers = require("../../models/matchupMakers");
 
 module.exports = {
-  handleStringSelectInteraction(interaction) {
-    let db = parseDatabase();
-
+  async handleStringSelectInteraction(interaction) {
     if (interaction.customId === "week") {
-      db.weekSelection = interaction.values[0];
+      await MatchupMakers.findOneAndUpdate(
+        {
+          server: interaction.guild.id,
+        },
+        { week: interaction.values[0] },
+        { new: true, runValidators: true, upsert: false }
+      )
+        .then((result) => {
+          if (!result) {
+            return interaction.reply({
+              content: "You need to set up the matchup maker first!",
+              ephemeral: true,
+            });
+          } else {
+            interaction.deferUpdate();
+          }
+        })
+        .catch(console.error);
     }
-    writeToDatabase(db);
-    interaction.deferUpdate();
   },
 };

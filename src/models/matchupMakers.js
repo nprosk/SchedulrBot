@@ -1,10 +1,10 @@
 const { Schema, model } = require('mongoose');
 
 const matchupMakersSchema = new Schema({
-  week: { type: Number, required: true },
-  team1: { type: String, required: true },
-  team2: { type: String, required: true },
-  server: { type: String, required: true },
+  week: { type: Number, default: null},
+  team1: { type: String, default: null},
+  team2: { type: String, default: null},
+  server: { type: String, required: true , unique: true},
 });
 
 module.exports = model('MatchupMakers', matchupMakersSchema);

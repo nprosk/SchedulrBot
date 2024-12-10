@@ -8,12 +8,19 @@ const {
   PermissionFlagsBits,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  ChatInputCommandInteraction,
 } = require("discord.js");
+const MatchupMakers = require("../../models/matchupMakers");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("post-matchup-maker")
     .setDescription("Post the matchup maker message"),
+  
+    /**
+     * 
+     * @param {ChatInputCommandInteraction} interaction 
+     */
   async execute(interaction) {
     const team1 = new RoleSelectMenuBuilder()
       .setCustomId("team1")
@@ -55,14 +62,12 @@ module.exports = {
     const row4 = new ActionRowBuilder().addComponents(confirm, remove);
 
     const guild = interaction.guild;
-    const findChannel = interaction.guild.channels.cache.find(
-      (channel) =>
-        channel.name === "Match Maker" &&
-        channel.type === ChannelType.GuildText
-    );
+    const findChannel = interaction.guild.channels.cache.find((channel) => {
+      return channel.name === "match-maker" && channel.type === ChannelType.GuildText;
+    });
     if (!findChannel) {
       const channel = await guild.channels.create({
-        name: "Match Maker",
+        name: "match-maker",
         type: ChannelType.GuildText,
         parent:
           interaction.guild.channels.cache.find(
@@ -87,11 +92,32 @@ module.exports = {
         components: [row1, row2, row3, row4],
       });
     } else {
+      
+      //delete all messages in the channel first
+      const messages = await findChannel.messages.fetch();
+      for (const message of messages.values()) {
+        await message.delete();
+      };
+      
       await findChannel.send({
         content: "Choose the two teams",
         components: [row1, row2, row3, row4],
       });
     }
+
+    //delete all prev matchup makers for the server
+    await MatchupMakers.deleteMany({
+      server: interaction.guild.id,
+    });
+
+    const matchupMaker = new MatchupMakers({
+      team1: null,
+      team2: null,
+      week: null,
+      server: interaction.guild.id,
+    });
+
+    await matchupMaker.save();
 
     await interaction.reply({
       content: "Message sent!",

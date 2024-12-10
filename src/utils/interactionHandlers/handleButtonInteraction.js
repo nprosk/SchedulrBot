@@ -1,4 +1,3 @@
-const { parseDatabase } = require("../database/parseDatabase");
 const Matches = require("../../models/matches");
 const MatchupMakers = require("../../models/matchupMakers");
 const { Interaction } = require("discord.js");
@@ -25,29 +24,13 @@ module.exports = {
         content: "You need to select two teams!",
         ephemeral: true,
       });
-    }
-
-    if (db.roles.length < 2) {
-      await interaction.reply({
-        content: "You need to select two teams!",
-        ephemeral: true,
-      });
-      return;
-    } else if (db.roles[0] === db.roles[1]) {
+    } else if (existingMatchupMaker.team1 === existingMatchupMaker.team2) {
       await interaction.reply({
         content: "You need to select two different teams!",
         ephemeral: true,
       });
       return;
-    } else if (!db.roles[0] || !db.roles[1]) {
-      await interaction.reply({
-        content: "You need to select two teams!",
-        ephemeral: true,
-      });
-      return;
-    }
-
-    if (!db.weekSelection) {
+    } else if (!existingMatchupMaker.week) {
       await interaction.reply({
         content: "You need to select a week!",
         ephemeral: true,
@@ -55,9 +38,9 @@ module.exports = {
       return;
     }
 
-    const week = parseInt(db.weekSelection);
-    const role1 = db.roles[0];
-    const role2 = db.roles[1];
+    const week = existingMatchupMaker.week;
+    const role1 = existingMatchupMaker.team1;
+    const role2 = existingMatchupMaker.team2;
     const server = interaction.guild.id;
     const status = "pending";
 
@@ -92,7 +75,7 @@ module.exports = {
       });
 
       return interaction.reply({
-        content: `Match in week ${week}, ${role1} vs. ${role2} has been added to the database!`,
+        content: `Match in week ${week}, <@&${role1}> vs. <@&${role2}> has been added to the database!`,
         ephemeral: true,
       });
     }
