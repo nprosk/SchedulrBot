@@ -7,11 +7,11 @@ this command will remove the matchup from the matchup database
 admin only
 
 /create-channels [week #]
-this command will create the channels for the week
+this command will create the channels for a specific week (defaults to current week)
 admin only
 
 /destroy-channels [week #]
-this command will destroy the channels for the week
+this command will destroy the channels for a specific week (defaults to current week)
 admin only
 
 /confirm-match

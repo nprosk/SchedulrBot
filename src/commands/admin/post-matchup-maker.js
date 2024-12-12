@@ -16,11 +16,11 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("post-matchup-maker")
     .setDescription("Post the matchup maker message"),
-  
-    /**
-     * 
-     * @param {ChatInputCommandInteraction} interaction 
-     */
+
+  /**
+   *
+   * @param {ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     const team1 = new RoleSelectMenuBuilder()
       .setCustomId("team1")
@@ -63,7 +63,9 @@ module.exports = {
 
     const guild = interaction.guild;
     const findChannel = interaction.guild.channels.cache.find((channel) => {
-      return channel.name === "match-maker" && channel.type === ChannelType.GuildText;
+      return (
+        channel.name === "match-maker" && channel.type === ChannelType.GuildText
+      );
     });
     if (!findChannel) {
       const channel = await guild.channels.create({
@@ -92,13 +94,12 @@ module.exports = {
         components: [row1, row2, row3, row4],
       });
     } else {
-      
       //delete all messages in the channel first
       const messages = await findChannel.messages.fetch();
       for (const message of messages.values()) {
         await message.delete();
-      };
-      
+      }
+
       await findChannel.send({
         content: "Choose the two teams",
         components: [row1, row2, row3, row4],
