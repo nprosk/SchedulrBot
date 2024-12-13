@@ -4,7 +4,7 @@ const matchesSchema = new Schema({
   week: { type: Number, required: true },
   role1: { type: String, required: true },
   role2: { type: String, required: true },
-  status: { type: String, required: false, default: 'pending' },
+  status: { type: String, required: false, default: 'pending', enum: ['pending', 'scheduled', 'completed'] },
   server: { type: String, required: true },
 });
 
