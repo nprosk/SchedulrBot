@@ -1,4 +1,8 @@
-const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  ChannelType,
+} = require("discord.js");
 const ServerData = require("../../models/serverData");
 const Matches = require("../../models/matches");
 
@@ -50,6 +54,9 @@ module.exports = {
       }).catch(console.error);
 
       for (const match of matches) {
+        if (match.status !== "pending") {
+          continue;
+        }
         const role1 = interaction.guild.roles.cache.find((role) => {
           return role.id === match.role1;
         });
@@ -57,27 +64,25 @@ module.exports = {
           return role.id === match.role2;
         });
 
-        const channel = await interaction.guild.channels.create(
-          {
-            name: `${role1.name}-vs-${role2.name}`,
-            type: ChannelType.GuildText,
-            parent: parentGroup,
-            permissionOverwrites: [
-              {
-                id: interaction.guild.roles.everyone.id,
-                deny: [PermissionFlagsBits.ViewChannel],
-              },
-              {
-                id: role1.id,
-                allow: [PermissionFlagsBits.ViewChannel],
-              },
-              {
-                id: role2.id,
-                allow: [PermissionFlagsBits.ViewChannel],
-              },
-            ],
-          }
-        );
+        await interaction.guild.channels.create({
+          name: `${role1.name}-vs-${role2.name}`,
+          type: ChannelType.GuildText,
+          parent: parentGroup,
+          permissionOverwrites: [
+            {
+              id: interaction.guild.roles.everyone.id,
+              deny: [PermissionFlagsBits.ViewChannel],
+            },
+            {
+              id: role1.id,
+              allow: [PermissionFlagsBits.ViewChannel],
+            },
+            {
+              id: role2.id,
+              allow: [PermissionFlagsBits.ViewChannel],
+            },
+          ],
+        });
       }
 
       await interaction.reply({
