@@ -65,7 +65,7 @@ module.exports = {
         });
 
         await interaction.guild.channels.create({
-          name: `${role1.name}-vs-${role2.name}`,
+          name: `${role1.name}_vs_${role2.name}`,
           type: ChannelType.GuildText,
           parent: parentGroup,
           permissionOverwrites: [
